@@ -1,0 +1,32 @@
+-- Please copy the code provided below and execute it in your tool or editor to generate the dataset.
+
+-- Creating mountain_huts table
+DROP TABLE IF EXISTS mountain_huts;
+CREATE TABLE mountain_huts 
+(
+	id 			INTEGER NOT NULL UNIQUE,
+	name 		VARCHAR(40) NOT NULL UNIQUE,
+	altitude 	INTEGER NOT NULL
+);
+
+-- Inserting values into mountain_huts table
+INSERT INTO mountain_huts VALUES (1, 'Dakonat', 1900);
+INSERT INTO mountain_huts VALUES (2, 'Natisa', 2100);
+INSERT INTO mountain_huts VALUES (3, 'Gajantut', 1600);
+INSERT INTO mountain_huts VALUES (4, 'Rifat', 782);
+INSERT INTO mountain_huts VALUES (5, 'Tupur', 1370);
+
+-- Creating trails table
+DROP TABLE IF EXISTS trails;
+CREATE TABLE trails 
+(
+	hut1 		INTEGER NOT NULL,
+	hut2 		INTEGER NOT NULL
+);
+
+-- Inserting values into trails table
+INSERT INTO trails VALUES (1, 3);
+INSERT INTO trails VALUES (3, 2);
+INSERT INTO trails VALUES (3, 5);
+INSERT INTO trails VALUES (4, 5);
+INSERT INTO trails VALUES (1, 5);

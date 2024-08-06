@@ -1,0 +1,39 @@
+-- Thought Process:
+-- Firstly, we must combine both tables to get all the required columns together. 
+-- Secondly, as the edges/trails are bi-directional, we have to add reverse edges 
+-- in the table wherever possible, then we have to just connect using the middle 
+-- value or where one trail ends and the other starts.
+
+
+-- CODE
+
+WITH cte1 AS (
+	SELECT T.hut1 AS start_hut, M.name AS start_hut_name, M.altitude AS start_hut_altitude, T.hut2 AS end_hut
+	FROM mountain_huts AS M
+	JOIN trails AS T
+	ON T.hut1 = M.id
+	
+), cte2 AS (
+	SELECT T2.*, M2.name AS end_hut_name, M2.altitude AS end_hut_altitude, 
+	CASE
+		WHEN start_hut_altitude > M2.altitude THEN 1
+		ELSE 0
+	END AS flag
+	FROM cte1 AS T2
+	JOIN mountain_huts AS M2
+	ON T2.end_hut = M2.id
+	
+), cte_final AS (
+	SELECT
+	CASE WHEN flag = 1 THEN start_hut ELSE end_hut END AS start_hut,
+	CASE WHEN flag = 1 THEN start_hut_name ELSE end_hut_name END AS start_hut_name,
+	CASE WHEN flag = 1 THEN end_hut ELSE start_hut END AS end_hut,
+	CASE WHEN flag = 1 THEN end_hut_name ELSE start_hut_name END AS end_hut_name
+	FROM cte2
+)
+SELECT C1.start_hut_name AS START, 
+	   C2.start_hut_name AS MIDDLE, 
+	   C2.end_hut_name AS END
+FROM cte_final C1
+JOIN cte_final C2 
+ON C1.end_hut = C2.start_hut;

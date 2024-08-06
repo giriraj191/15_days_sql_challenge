@@ -1,0 +1,25 @@
+-- Thought Process:
+-- To make a pair, we need to combine both brands table with year to uniquely
+-- identify the rows. Now, using that we can now include all the rows and filter
+-- out only those rows which don't fit 'Condition 1' or which fit 'Condition 2'
+-- from problem statement.
+
+
+-- CODE
+
+WITH cte AS (
+	SELECT *,
+	CASE
+		WHEN brand1 < brand2 THEN CONCAT(brand1, brand2, year)
+		ELSE CONCAT(brand2, brand1, year)
+	END AS id
+	FROM brands
+), cte_row_number AS (
+	SELECT *,
+	ROW_NUMBER() OVER(PARTITION BY id ORDER BY id) AS row_no
+	FROM cte
+)
+SELECT brand1, brand2, year, custom1, custom2, custom3, custom4 
+FROM cte_row_number 
+WHERE (row_no = 1 OR
+	   custom1 <> custom3 AND custom2 <> custom4)
