@@ -1,0 +1,18 @@
+-- Please copy the code provided below and execute it in your tool or editor to generate the dataset.
+
+DROP TABLE IF EXISTS Q4_data;
+
+-- Creating Q4_data table
+CREATE TABLE Q4_data
+(
+    id       INT,
+    name     VARCHAR(20),
+    location VARCHAR(20)
+);
+
+-- Inserting values into Q4_data table
+INSERT INTO Q4_data (id, name, location) VALUES (1, NULL, NULL);
+INSERT INTO Q4_data (id, name, location) VALUES (2, 'David', NULL);
+INSERT INTO Q4_data (id, name, location) VALUES (3, NULL, 'London');
+INSERT INTO Q4_data (id, name, location) VALUES (4, NULL, NULL);
+INSERT INTO Q4_data (id, name, location) VALUES (5, 'David', NULL);

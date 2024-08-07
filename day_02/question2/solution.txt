@@ -1,0 +1,40 @@
+-- SOLUTION 1
+
+-- Thought Process:
+-- As discussed in question1 of day 2 also, if we able to extract requried value from 
+-- each column and if it is single cell then we can combine our results using 
+-- CROSS JOIN.
+
+
+-- CODE
+
+-- OUTPUT 1
+SELECT *
+FROM (SELECT id FROM Q4_data ORDER BY id LIMIT 1)
+CROSS JOIN (SELECT name FROM Q4_data WHERE name IS NOT NULL ORDER BY id LIMIT 1)
+CROSS JOIN (SELECT location FROM Q4_data WHERE location IS NOT NULL ORDER BY id LIMIT 1);
+
+-- OUTPUT 2
+SELECT *
+FROM (SELECT id FROM Q4_data ORDER BY id DESC LIMIT 1)
+CROSS JOIN (SELECT name FROM Q4_data WHERE name IS NOT NULL ORDER BY id LIMIT 1)
+CROSS JOIN (SELECT location FROM Q4_data WHERE location IS NOT NULL ORDER BY id LIMIT 1);
+
+
+-- SOLUTION 2
+
+-- CODE
+
+-- OUTPUT 1
+SELECT 
+	MIN(id) AS id, 
+	MIN(name) AS name, 
+	MIN(location) AS location
+FROM Q4_data;
+
+-- OUTPUT 2
+SELECT 
+	MAX(id) AS id, 
+	MAX(name) AS name, 
+	MIN(location) AS location
+FROM Q4_data;

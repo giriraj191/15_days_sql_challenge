@@ -1,0 +1,47 @@
+-- SOLUTION 1
+
+-- Thought Process:
+-- We can find for every column our desired value, right. Now, we just have to combine 
+-- those values into single table, as out will be single cell per columns so we can 
+-- achieve this by using CROSS JOIN.
+
+
+-- CODE
+
+SELECT * 
+FROM (SELECT car FROM footer WHERE car IS NOT NULL ORDER BY id DESC LIMIT 1)
+CROSS JOIN (SELECT length FROM footer WHERE length IS NOT NULL ORDER BY id DESC LIMIT 1)
+CROSS JOIN (SELECT width FROM footer WHERE width IS NOT NULL ORDER BY id DESC LIMIT 1)
+CROSS JOIN (SELECT height FROM footer WHERE height IS NOT NULL ORDER BY id DESC LIMIT 1)
+
+
+
+
+-- SOLUTION 2
+
+-- Thought Process:
+-- If somehow we able to combine/aggregate all non-null values followed null values 
+-- into single partition, then we can use FIRST_VALUE to find the top non-null value 
+-- of each partition.
+-- After that, we just have to reverse the order to find top non-null value of last 
+-- partition.
+
+
+-- CODE
+
+WITH cte AS (
+	SELECT id, 
+	   car, SUM(CASE WHEN car IS NULL THEN 0 ELSE 1 END) OVER(ORDER BY id) AS car_partition,
+	   length, SUM(CASE WHEN length IS NULL THEN 0 ELSE 1 END) OVER(ORDER BY id) AS length_partition,
+	   width, SUM(CASE WHEN width IS NULL THEN 0 ELSE 1 END) OVER(ORDER BY id) AS width_partition,
+	   height, SUM(CASE WHEN height IS NULL THEN 0 ELSE 1 END) OVER(ORDER BY id) AS height_partition
+	FROM footer
+)
+SELECT 
+	FIRST_VALUE(car) OVER(PARTITION BY car_partition ORDER BY id) AS car,
+	FIRST_VALUE(length) OVER(PARTITION BY length_partition ORDER BY id) AS length,
+	FIRST_VALUE(width) OVER(PARTITION BY width_partition ORDER BY id) AS width,
+	FIRST_VALUE(height) OVER(PARTITION BY height_partition ORDER BY id) AS height
+FROM cte
+ORDER BY id DESC
+LIMIT 1;
