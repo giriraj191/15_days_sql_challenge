@@ -1,0 +1,59 @@
+-- OUTPUT 1
+
+-- Thought Process:
+-- First, aggregate all the trns_type i.e., all income and deduction table data. After
+-- that find a way to combine data with salary table.
+-- HINT - As we need all type combination hence, we can use a type of join.
+
+
+-- CODE
+
+INSERT INTO emp_transaction
+SELECT emp_id, emp_name, trns_type, ROUND(base_salary * (percentage/100), 2) amount
+FROM salary
+CROSS JOIN (SELECT income trns_type, CAST (percentage AS DECIMAL) percentage 
+			FROM income
+			UNION
+			SELECT deduction trns_type, CAST (percentage AS DECIMAL) percentage 
+			FROM deduction);
+
+SELECT DISTINCT trns_type 
+FROM emp_transaction;
+
+
+-- OUTPUT 2
+
+-- Thought Process:
+-- As we need to convert row data into column we can use crosstab function to achieve this.
+
+
+-- CODE
+
+-- Creating tablefunc extension to use crosstab function
+CREATE EXTENSION IF NOT EXISTS tablefunc;
+
+SELECT employee, basic, allowance, others, 
+	   (basic + allowance + others) gross,
+	   insurance, health, house, 
+	   (insurance + health + house) total_deduction,
+	   (basic + allowance + others) - (insurance + health + house) net_pay
+
+FROM crosstab(
+	
+		'SELECT emp_name, 
+				trns_type, 
+				amount
+		 FROM emp_transaction
+		 ORDER BY 1, 2',
+	
+		'SELECT DISTINCT trns_type 
+		 FROM emp_transaction
+		 ORDER BY trns_type'
+	
+	) AS ct(employee VARCHAR, 
+			allowance NUMERIC, 
+			basic NUMERIC,
+			health NUMERIC,
+			house NUMERIC,
+			insurance NUMERIC,
+			others NUMERIC);

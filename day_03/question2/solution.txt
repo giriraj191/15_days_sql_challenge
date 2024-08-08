@@ -1,0 +1,55 @@
+-- SOLUTION 1
+
+-- OUTPUT 1
+
+-- CODE
+
+(
+    SELECT * 
+    FROM student_tests 
+    ORDER BY test_id 
+    LIMIT 1
+) UNION (
+    SELECT b.*
+	FROM student_tests a 
+	JOIN student_tests b ON a.test_id + 1 = b.test_id
+	WHERE a.marks < b.marks
+) ORDER BY test_id;
+
+
+-- OUTPUT 2
+
+-- CODE
+
+SELECT b.*
+FROM student_tests a 
+JOIN student_tests b ON a.test_id + 1 = b.test_id
+WHERE a.marks < b.marks
+
+
+
+
+-- SOLUTION 2
+
+-- Thought Process:
+-- As we need previous row so, we can use LAG() window function fetch 
+-- previous row value and then compare with current value.
+
+-- OUTPUT 1
+
+-- CODE 
+
+SELECT *
+FROM (SELECT *, LAG(marks, 1, 0) OVER (ORDER BY test_id) AS prev_test_mark
+	  FROM student_tests) AS temp
+WHERE temp.marks > prev_test_mark;
+
+
+-- OUTPUT 2
+
+-- CODE
+
+SELECT *
+FROM (SELECT *, LAG(marks, 1, marks) OVER (ORDER BY test_id) AS prev_test_mark
+	  FROM student_tests) AS temp
+WHERE temp.marks > prev_test_mark;
