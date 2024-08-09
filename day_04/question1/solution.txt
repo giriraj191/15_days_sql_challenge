@@ -1,0 +1,16 @@
+-- Thought Process:
+-- Main idea is to use EXTRACT fx to find out day of the week after that logic is simple.
+
+
+-- CODE
+
+SELECT product_id, day_indicator, dates
+FROM	(SELECT *, 
+			EXTRACT('isodow' FROM dates) AS day,
+			CASE 
+				WHEN SUBSTRING(day_indicator, EXTRACT('isodow' FROM dates)::INT, 1) = '1'
+				THEN 'IN'
+				ELSE 'OUT'
+			END AS status
+		FROM Day_Indicator) AS x
+WHERE status = 'IN';

@@ -1,0 +1,27 @@
+-- Please copy the code provided below and execute it in your tool or editor to generate the dataset.
+
+-- Drop the Day_Indicator table if it exists and create a new one
+DROP TABLE IF EXISTS Day_Indicator;
+
+CREATE TABLE Day_Indicator (
+    Product_ID     VARCHAR(10),	
+    Day_Indicator  VARCHAR(7),
+    Dates          DATE
+);
+
+-- Insert values into the Day_Indicator table
+INSERT INTO Day_Indicator VALUES 
+('AP755', '1010101', TO_DATE('04-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('05-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('06-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('07-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('08-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('09-Mar-2024', 'dd-mon-yyyy')),
+('AP755', '1010101', TO_DATE('10-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('04-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('05-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('06-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('07-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('08-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('09-Mar-2024', 'dd-mon-yyyy')),
+('XQ802', '1000110', TO_DATE('10-Mar-2024', 'dd-mon-yyyy'));

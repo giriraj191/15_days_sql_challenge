@@ -1,0 +1,58 @@
+-- SOLUTION 1
+
+-- Thought Process:
+-- We can use SUM() as WINDOW fx and hence, we can use it fill 
+-- following NULL values with same value as above. Then, we can turn 
+-- it into different sections and use FIRST_VALUE() to extract top 
+-- value of each section and get our result.
+
+
+-- CODE
+
+WITH cte AS (
+	SELECT *,
+		SUM(CASE WHEN job_role IS NULL THEN 0 ELSE 1 END) OVER(ORDER BY row_id) AS section
+	FROM job_skills
+)
+SELECT 
+	row_id,
+	FIRST_VALUE(job_role) OVER(PARTITION BY section ORDER BY row_id) AS job_role,
+	skills
+FROM cte;
+
+
+
+
+-- SOLUTION 2
+
+-- Thought Process:
+-- As we've to just fetch previous value and take next action iteratively based on that
+-- then it's a perfect question to use recursive query.
+-- Take initial query from previous/base result and then for next query decide value of
+-- job_role either using CASE statement or COALESCE. Important is JOIN condition join 
+-- current value/row with (previous row + 1) to have common ground for JOIN and to access 
+-- previous row you have to use cte(table).
+
+
+-- CODE
+
+-- NOTE: cte act as previous table while handling things in recursive query.
+
+WITH RECURSIVE cte AS (
+	-- base query
+	SELECT row_id, job_role, skills
+	FROM job_skills AS js1
+	WHERE row_id = 1
+
+	UNION
+
+	-- recursive query
+	SELECT 
+		js2.row_id, 
+		COALESCE(js2.job_role, cte.job_role) AS job_role,
+		js2.skills
+	FROM cte
+	JOIN job_skills AS js2 
+	ON js2.row_id = cte.row_id + 1
+)
+SELECT * FROM cte;

@@ -1,0 +1,25 @@
+-- Please copy the code provided below and execute it in your tool or editor to generate the dataset.
+
+-- Drop the job_skills table if it exists and create a new one
+DROP TABLE IF EXISTS job_skills;
+
+CREATE TABLE job_skills (
+    row_id    INT,
+    job_role  VARCHAR(20),
+    skills    VARCHAR(20)
+);
+
+-- Insert values into the job_skills table
+INSERT INTO job_skills VALUES 
+(1, 'Data Engineer', 'SQL'),
+(2, NULL, 'Python'),
+(3, NULL, 'AWS'),
+(4, NULL, 'Snowflake'),
+(5, NULL, 'Apache Spark'),
+(6, 'Web Developer', 'Java'),
+(7, NULL, 'HTML'),
+(8, NULL, 'CSS'),
+(9, 'Data Scientist', 'Python'),
+(10, NULL, 'Machine Learning'),
+(11, NULL, 'Deep Learning'),
+(12, NULL, 'Tableau');
