@@ -1,0 +1,21 @@
+-- Please run below code into your database tool/editor and to obtain required dataset
+
+-- Drop table orders if it's already exists, and create new one
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders 
+(
+    customer_id INT,
+    dates DATE,
+    product_id INT
+);
+
+-- Inserting values into orders table
+INSERT INTO orders (customer_id, dates, product_id) VALUES
+    (1, '2024-02-18', 101),
+    (1, '2024-02-18', 102),
+    (1, '2024-02-19', 101),
+    (1, '2024-02-19', 103),
+    (2, '2024-02-18', 104),
+    (2, '2024-02-18', 105),
+    (2, '2024-02-19', 101),
+    (2, '2024-02-19', 106);

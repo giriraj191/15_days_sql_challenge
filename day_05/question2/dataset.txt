@@ -1,0 +1,26 @@
+-- Please run below code into your database tool/editor and to obtain required dataset
+
+-- Drop table auto_repair if it's already exists, and create new ones
+DROP TABLE IF EXISTS auto_repair;
+CREATE TABLE auto_repair
+(
+    client       VARCHAR(20),
+    auto         VARCHAR(20),
+    repair_date  INT,
+    indicator    VARCHAR(20),
+    value        VARCHAR(20)
+);
+-- Inserting values into auto_repair table
+INSERT INTO auto_repair (client, auto, repair_date, indicator, value) VALUES
+    ('c1', 'a1', 2022, 'level', 'good'),
+    ('c1', 'a1', 2022, 'velocity', '90'),
+    ('c1', 'a1', 2023, 'level', 'regular'),
+    ('c1', 'a1', 2023, 'velocity', '80'),
+    ('c1', 'a1', 2024, 'level', 'wrong'),
+    ('c1', 'a1', 2024, 'velocity', '70'),
+    ('c2', 'a1', 2022, 'level', 'good'),
+    ('c2', 'a1', 2022, 'velocity', '90'),
+    ('c2', 'a1', 2023, 'level', 'wrong'),
+    ('c2', 'a1', 2023, 'velocity', '50'),
+    ('c2', 'a2', 2024, 'level', 'good'),
+    ('c2', 'a2', 2024, 'velocity', '80');

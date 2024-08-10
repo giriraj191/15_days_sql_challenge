@@ -1,0 +1,51 @@
+-- SOLUTION
+
+-- Thought Process:
+-- 1. Clear the clutter, by which I mean to extract the only 
+--    columns you require. UNION will not work as you need both 
+--    indicator data into single field thus, go for SELF JOIN.
+	
+-- 2. Now, you have the requried table which you have to convert
+--    from row to column i.e., use case of crosstab (PIVOT).
+--    > make velocity as row identifier
+--    > make level as 	column to be pivoted
+--    > make frequency as data to be filled
+--    Hence, you will obtain the requied table, main task is to clear
+--    the clutter and align it properly in format so that it can be 
+--    pivoted.
+
+
+-- CODE
+
+CREATE EXTENSION IF NOT EXISTS tablefunc;
+
+SELECT 
+	velocity,
+	COALESCE(good, 0) AS good,
+	COALESCE(regular, 0) AS regular,
+	COALESCE(wrong, 0) AS wrong
+	
+FROM crosstab(
+	
+		'SELECT 
+			b.value AS velocity,
+			a.value AS level,
+			COUNT(b.value) AS frequency
+		FROM auto_repair AS a
+		JOIN auto_repair AS b
+		ON a.client = b.client AND a.auto = b.auto AND a.repair_date = b.repair_date
+		WHERE a.indicator = ''level'' AND b.indicator = ''velocity''
+		GROUP BY velocity, level
+		ORDER BY velocity',
+
+		'SELECT DISTINCT(value) 
+		FROM auto_repair 
+		WHERE indicator = ''level'' 
+		ORDER BY value;'
+	
+) as output (
+		velocity VARCHAR, 
+		good BIGINT, 
+		regular BIGINT, 
+		wrong BIGINT
+)

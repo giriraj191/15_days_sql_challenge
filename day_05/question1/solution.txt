@@ -1,0 +1,28 @@
+-- SOLUTION
+
+-- Thought Process:
+-- If you see the final picture, you'll find out that we just
+-- need to aggregate products at same date belonging to same 
+-- customer. Hence, a best use case of GROUP BY clause, and for 
+-- aggregation we can use inbuilt SQL function i.e., STRING_AGG().
+-- Finally, just merge the aggregated products with the original
+-- ones using UNION.
+
+
+-- CODE
+
+(
+	SELECT 
+		dates, 
+		CAST(product_id AS VARCHAR) AS products
+	FROM orders
+	
+) UNION (
+	
+	SELECT 
+		dates,
+		STRING_AGG(CAST(product_id AS VARCHAR), ',') AS products
+	FROM orders	
+	GROUP BY customer_id, dates
+	
+) ORDER BY dates;
