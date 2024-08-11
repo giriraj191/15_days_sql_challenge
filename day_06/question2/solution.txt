@@ -1,0 +1,58 @@
+-- SOLUTION
+
+-- Thought Process:
+-- > The thought process behind the code involves creating a hierarchical 
+--   view of employees and their managers using a recursive CTE. 
+-- > The approach starts with identifying the top-level managers (those 
+--   without managers) in the base query and then recursively includes 
+--   their subordinates by joining the CTE with the company table. 
+-- > The main idea is to keep all the employees in employee column with 
+--   their correct team number and frequency.
+-- > There are multiple ways to achieve this, one is coded below, the main 
+--   idea is as stated in last point.
+
+
+-- CODE 
+
+WITH RECURSIVE cte AS (
+
+	-- base query
+	SELECT 
+		c.employee, 
+		c.manager, 
+		ct.teams
+	FROM company AS c 
+	CROSS JOIN cte_teams AS ct
+	WHERE c.manager IS NULL
+
+	UNION
+
+	-- recursive query
+	SELECT 
+		c.employee, 
+		c.manager, 
+		COALESCE(ct.teams, cte.teams) AS teams
+	FROM company AS c
+	JOIN cte 
+	ON cte.employee = c.manager
+	LEFT JOIN cte_teams AS ct 
+	ON ct.employee = c.employee
+	
+), cte_teams AS (
+	
+	SELECT 
+		b.employee,
+		CONCAT('Team ', ROW_NUMBER() 
+                        OVER(ORDER BY b.employee)) AS teams
+	FROM company AS a
+	JOIN company AS b
+	ON a.employee = b.manager
+	WHERE a.manager IS NULL
+	
+)
+SELECT 
+	teams, 
+	STRING_AGG(employee, ', ')
+FROM cte
+GROUP BY teams
+ORDER BY teams;

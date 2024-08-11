@@ -1,0 +1,21 @@
+-- Please copy the code provided below and execute it in your tool or editor to generate the dataset.
+
+DROP TABLE IF EXISTS company;
+CREATE TABLE company
+(
+    employee VARCHAR(10) PRIMARY KEY,
+    manager  VARCHAR(10)
+);
+
+-- Inserting values into company
+INSERT INTO company (employee, manager) VALUES
+    ('Elon', null),
+    ('Ira', 'Elon'),
+    ('Bret', 'Elon'),
+    ('Earl', 'Elon'),
+    ('James', 'Ira'),
+    ('Drew', 'Ira'),
+    ('Mark', 'Bret'),
+    ('Phil', 'Mark'),
+    ('Jon', 'Mark'),
+    ('Omid', 'Earl');

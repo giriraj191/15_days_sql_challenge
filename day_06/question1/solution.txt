@@ -1,0 +1,25 @@
+-- SOLUTION
+
+-- Thought Process:
+-- Just use the difference of average and value and use WINDOW fx to eliminate the RANK 1
+
+
+-- CODE
+
+WITH result AS (
+	WITH cte AS (
+		SELECT *,
+			ROUND(ABS(AVG(rating) 
+					  OVER(PARTITION BY hotel 
+						   RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) - rating), 
+			      2) AS deviation
+		FROM hotel_ratings
+	)
+	SELECT *,
+		RANK() OVER(PARTITION BY hotel ORDER BY deviation DESC) AS pos
+	FROM cte
+)
+SELECT hotel, year, rating
+FROM result
+WHERE pos > 1
+ORDER BY hotel DESC, year;

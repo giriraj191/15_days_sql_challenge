@@ -1,0 +1,21 @@
+-- Please run below code in editor for creation of database
+
+-- Creating hotel_ratings table
+DROP TABLE IF EXISTS hotel_ratings;
+CREATE TABLE hotel_ratings
+(
+    hotel VARCHAR(30),
+    year INT,
+    rating DECIMAL
+);
+
+-- Inserting values from hotel_ratings
+INSERT INTO hotel_ratings (hotel, year, rating) VALUES
+    ('Radisson Blu', 2020, 4.8),
+    ('Radisson Blu', 2021, 3.5),
+    ('Radisson Blu', 2022, 3.2),
+    ('Radisson Blu', 2023, 3.8),
+    ('InterContinental', 2020, 4.2),
+    ('InterContinental', 2021, 4.5),
+    ('InterContinental', 2022, 1.5),
+    ('InterContinental', 2023, 3.8);
