@@ -1,0 +1,19 @@
+-- Please run below code into your code editor in order to generate dataset.
+
+-- Drop the table if it exists
+DROP TABLE IF EXISTS invoice;
+
+-- Create the invoice table
+CREATE TABLE invoice
+(
+    serial_no     INT,
+    invoice_date  DATE
+);
+
+-- Insert records into the invoice table
+INSERT INTO invoice (serial_no, invoice_date) VALUES
+    (330115, TO_DATE('01-Mar-2024', 'DD-MON-YYYY')),
+    (330120, TO_DATE('01-Mar-2024', 'DD-MON-YYYY')),
+    (330121, TO_DATE('01-Mar-2024', 'DD-MON-YYYY')),
+    (330122, TO_DATE('02-Mar-2024', 'DD-MON-YYYY')),
+    (330125, TO_DATE('02-Mar-2024', 'DD-MON-YYYY'));

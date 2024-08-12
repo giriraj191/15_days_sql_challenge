@@ -1,0 +1,94 @@
+-- SOLUTION 1
+
+-- Thought Process:
+-- We can think of it like, we just need two things - 
+-- 	1. Next value from which we have to generate numbers
+-- 	2. Count of values we have to generate
+-- After that, we can pick and add next number and decrease the
+-- count until it becomes 0. As we have to iterate. so, we can 
+-- think of using RECURSIVE query.
+
+
+-- CODE
+
+WITH RECURSIVE number_generator AS (
+
+	-- base query
+	SELECT 
+		serial_no + 1 AS serial_no,
+		skip_cnt - 1 AS skip_cnt
+	FROM (SELECT 
+			serial_no,
+			LEAD(serial_no, 1, serial_no + 1)  
+			OVER() - serial_no - 1 AS skip_cnt
+		  FROM invoice)
+	WHERE skip_cnt > 0
+
+	UNION
+
+	-- recursive query
+	SELECT 
+		serial_no + 1, 
+		skip_cnt - 1
+	FROM number_generator
+	WHERE skip_cnt > 0
+	
+)
+SELECT serial_no AS missing_serial_no 
+FROM number_generator
+ORDER BY serial_no;
+
+
+
+
+-- SOLUTION 2
+
+-- Thought Process:
+-- We can avoid overthinking and just make a list of all 
+-- numbers from minimum value to max value and avoid all 
+-- other numbers from original invoice table.
+-- ;)
+
+
+-- CODE 1
+
+WITH cte_number_generator AS (
+	SELECT GENERATE_SERIES(MIN(serial_no), MAX(serial_no)) AS serial_no
+	FROM invoice
+)
+SELECT serial_no AS missing_serial_no
+FROM cte_number_generator 
+WHERE serial_no NOT IN (SELECT serial_no FROM invoice);
+
+
+-- CODE 2
+
+SELECT GENERATE_SERIES(MIN(serial_no), MAX(serial_no)) AS missing_serial_no
+FROM invoice
+EXCEPT
+SELECT serial_no 
+FROM invoice
+ORDER BY missing_serial_no;
+
+
+-- CODE 3
+
+WITH RECURSIVE number_generator AS (
+
+	-- base query
+	SELECT MIN(serial_no) as serial_no
+	FROM invoice
+
+	UNION 
+
+	-- recursive query
+	SELECT serial_no + 1 as serial_no
+	FROM number_generator
+	WHERE serial_no < (SELECT MAX(serial_no) FROM invoice)
+)
+SELECT serial_no AS missing_serial_no
+FROM number_generator
+EXCEPT
+SELECT serial_no 
+FROM invoice
+ORDER BY missing_serial_no;

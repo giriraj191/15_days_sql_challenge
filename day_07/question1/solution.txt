@@ -1,0 +1,40 @@
+-- SOLUTION
+
+-- Thought Process:
+-- The main idea is to aggregate number of managers and then 
+-- grouping them together and finding the count.
+-- You can either aggregate managers first and then attach each
+-- of them with their respective names using JOIN clause or 
+-- you can first join to attach each of them with their names and
+-- then count the number of managers.
+
+
+-- CODE 1
+
+WITH cte as (
+	SELECT 
+		manager, 
+		COUNT(*) AS number_of_employees
+	FROM employee_managers
+	GROUP BY manager
+	HAVING manager IS NOT NULL
+)
+SELECT 
+	b.name AS managers, 
+	a.number_of_employees
+FROM cte a
+JOIN employee_managers b
+ON a.manager = b.id
+ORDER BY a.number_of_employees DESC;
+
+
+-- CODE 2
+
+SELECT 
+	b.name AS managers,
+	COUNT(*) AS number_of_employees
+FROM employee_managers a
+JOIN employee_managers b
+ON a.manager = b.id
+GROUP BY b.name
+ORDER BY number_of_employees DESC;
