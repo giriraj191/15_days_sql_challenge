@@ -1,0 +1,39 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- Firstly, we have to aggregate data according to months. Then, 
+-- for each current record we have to divide it with all the 
+-- cases until now.
+-- HINT: make another column for cummilative sum to save computation
+
+
+-- CODE
+
+WITH monthly_covid_cases AS (
+	
+	SELECT 
+		EXTRACT(MONTH FROM dates) AS month, 
+		SUM(cases_reported) AS cases
+	FROM covid_cases
+	GROUP BY EXTRACT(MONTH FROM dates)
+	ORDER BY month
+	
+), result AS (
+	
+	SELECT *,
+		SUM(cases) OVER(ORDER BY month) AS cum_cases
+	FROM monthly_covid_cases
+	
+) 
+SELECT 
+	month,
+	cases,
+	CASE 
+		WHEN month > 1 
+		THEN ROUND(
+				cases / LAG(cum_cases) OVER(ORDER BY month) * 100, 
+				2
+			 )::VARCHAR
+		ELSE '-'
+	END AS percent_increase
+FROM result

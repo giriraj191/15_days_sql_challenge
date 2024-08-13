@@ -1,0 +1,31 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- As the friendship is bidirectional :), so make add all right to left 
+-- records also.
+-- Basic intuition is to get all the friends of friend1 and check 
+-- whether all its friend present in all friends of friend2.
+
+
+-- CODE
+
+WITH allfriends AS (
+	(
+		SELECT friend1, friend2
+		FROM friends
+	) UNION (
+		SELECT friend2, friend1
+		FROM friends
+	) ORDER BY 1, 2
+)
+SELECT 
+	f.*, 
+	COUNT(af.friend2)
+FROM friends f
+LEFT JOIN allfriends af
+ON (f.friend1 = af.friend1)
+   AND af.friend2 IN (SELECT af2.friend2
+					  FROM allfriends af2
+					  WHERE f.friend2 = af2.friend1)
+GROUP BY f.friend1, f.friend2
+ORDER BY f.friend1, f.friend2
