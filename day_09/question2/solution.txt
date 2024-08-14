@@ -1,0 +1,15 @@
+-- SOLUTION 
+
+-- CODE 
+
+SELECT
+	b.id,
+	b.name, 
+	COUNT(DISTINCT event_name) 
+        AS events_attended
+FROM events AS a
+JOIN employees AS b
+ON a.emp_id = b.id
+GROUP BY b.id, b.name
+HAVING COUNT(DISTINCT event_name) = (SELECT COUNT(DISTINCT event_name) FROM events)
+ORDER BY b.id

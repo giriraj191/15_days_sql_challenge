@@ -1,0 +1,26 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- Just find a way to aggregate data on basis of consecutive dates, 
+-- try adding or subtracting something. After you find a way to 
+-- aggregate then you just have to subtract dates to find start and 
+-- end dates.
+
+
+-- CODE
+	
+WITH grouped_data AS (
+	SELECT *,
+		login_date - DENSE_RANK() OVER(PARTITION BY user_id 
+									   ORDER BY user_id, login_date)::INT AS date_group
+	FROM user_login 
+)
+SELECT 
+	user_id,
+	MIN(login_date) AS start_date,
+	MAX(login_date) AS end_date,
+	MAX(login_date) - MIN(login_date) + 1 AS cons_days
+FROM grouped_data
+GROUP BY user_id, date_group
+HAVING (MAX(login_date) - MIN(login_date) + 1) >= 5
+ORDER BY user_id;
