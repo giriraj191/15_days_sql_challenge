@@ -1,0 +1,24 @@
+-- Solution
+
+-- Thought Process:
+-- It's a simple problem as we just have to sort according to age
+-- and find the middle value, we can use ROW_NUMBER to make things
+-- easy.
+
+
+-- CODE
+
+WITH cte AS (
+	SELECT 
+		country,
+		age,
+		ROW_NUMBER() OVER(PARTITION BY country) AS index,
+		COUNT(*) OVER(PARTITION BY country
+					  RANGE BETWEEN UNBOUNDED PRECEDING AND 
+									UNBOUNDED FOLLOWING)::DECIMAL 
+                 AS total_people	
+	FROM people
+)	
+SELECT country, age
+FROM cte
+WHERE index BETWEEN (total_people / 2) AND ((total_people / 2) + 1);

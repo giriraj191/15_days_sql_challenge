@@ -1,0 +1,32 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- First, we have to find all the late delivery pizzas and then 
+-- sum up the late pizzas and divide them with the total pizzas 
+-- in order to find the percentage.
+
+
+-- CODE
+
+WITH cte AS (
+	SELECT 
+		TO_CHAR(order_time, 'Mon-YYYY') as period,
+		no_of_pizzas,
+		TO_CHAR(actual_delivery - order_time, 'MI')::INT AS time_taken,
+		CASE
+			WHEN 
+				EXTRACT(HOUR FROM (actual_delivery - order_time)) * 60 +
+                EXTRACT(MINUTE FROM (actual_delivery - order_time)) > 30
+			THEN 1 
+			ELSE 0
+		END AS is_late
+	FROM pizza_delivery
+	WHERE actual_delivery IS NOT NULL
+)
+SELECT 
+	period,
+	ROUND((SUM(is_late)::DECIMAL / COUNT(1)) * 100, 1) AS delayed_percentage,
+	SUM(CASE WHEN is_late = 1 THEN no_of_pizzas ELSE 0 END) AS free_pizzas
+FROM cte
+GROUP BY period
+ORDER BY EXTRACT(MONTH FROM TO_DATE(period, 'Mon-YYYY'))

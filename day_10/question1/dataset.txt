@@ -1,0 +1,35 @@
+-- Follow the below instructions in order to generate required dataset.
+
+-- IMPORTANT 
+-- How to import '.csv' into SQL as dataset?
+-- [PosgresSQL Solution]
+-- 1. First create the table in correct order of columns as per csv file.
+-- 2. Go to 'LABEL IMP' section below and copy the code into editor
+-- 	A. If your file don't have headers then remove the CSV HEADER clause
+-- 	B. Replace the CSV_FILE_PATH with your file path
+-- 3. Run the code and its all done :)
+
+
+DROP TABLE IF EXISTS pizza_delivery;
+CREATE TABLE pizza_delivery 
+(
+	order_id 			INT,
+	order_time 			TIMESTAMP,
+	expected_delivery 	TIMESTAMP,
+	actual_delivery 	TIMESTAMP,
+	no_of_pizzas 		INT,
+	price 				DECIMAL
+);
+
+-- LABEL IMP
+
+COPY pizza_delivery(
+		order_id, 
+		order_time, 
+		expected_delivery, 
+		actual_delivery, 
+		no_of_pizzas, 
+		price)
+FROM 'CSV_FILE_PATH'
+DELIMITER ','
+CSV HEADER;
