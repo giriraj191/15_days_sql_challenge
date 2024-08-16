@@ -1,0 +1,33 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- It's pretty straight forward as we just have to break the problem in 
+-- pieces and solve one by one.
+
+-- CODE
+
+WITH merged_table AS (
+	
+	SELECT 
+		pv.*, 
+		us.session_starttime, 
+		us.session_endtime
+	FROM post_views AS pv
+	JOIN user_sessions AS us
+	ON pv.session_id = us.session_id
+	
+), insights AS (
+
+	SELECT 
+		post_id,
+		perc_viewed,
+		(perc_viewed / 100) * EXTRACT('EPOCH' FROM (session_endtime - session_starttime)) AS viewtime
+	FROM merged_table
+	
+)
+SELECT 
+	post_id,
+	SUM(viewtime) AS total_viewtime
+FROM insights
+GROUP BY post_id
+HAVING SUM(viewtime) > 5;

@@ -1,0 +1,41 @@
+-- Run your code for the below addititonal test cases for the problem.
+
+-- Update the result to 'Chennai Super Kings' for match number 17
+UPDATE ipl_results
+SET result = 'Chennai Super Kings'
+WHERE match_no = 17;
+
+-- Update the result to 'Mumbai Indians' for match number 5
+UPDATE ipl_results
+SET result = 'Mumbai Indians'
+WHERE match_no = 5;
+
+-- Update the result to 'Delhi Capitals' for match number 20
+UPDATE ipl_results
+SET result = 'Delhi Capitals'
+WHERE match_no = 20;
+
+-- Update the result to 'Punjab Kings' for match number 27
+UPDATE ipl_results
+SET result = 'Punjab Kings'
+WHERE match_no = 27;
+
+-- Update the result to 'Rajasthan Royals' for match number 32
+UPDATE ipl_results
+SET result = 'Rajasthan Royals'
+WHERE match_no = 32;
+
+-- Update the result to 'Lucknow Super Giants' for match number 43
+UPDATE ipl_results
+SET result = 'Lucknow Super Giants'
+WHERE match_no = 43;
+
+-- Update the result to 'Rajasthan Royals' for match number 60
+UPDATE ipl_results
+SET result = 'Rajasthan Royals'
+WHERE match_no = 60;
+
+-- Update the result to 'Sunrisers Hyderabad' for match number 65
+UPDATE ipl_results
+SET result = 'Sunrisers Hyderabad'
+WHERE match_no = 65;

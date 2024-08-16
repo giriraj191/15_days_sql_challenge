@@ -1,0 +1,105 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- Just follow step by step, this problem is easy level, implementation 
+-- is a bit hard.
+
+
+-- CODE: NORMAL OR WITHOUT ADDITIONAL TESTCASE
+
+WITH teams AS (
+	
+	SELECT DISTINCT home_team AS team_name FROM ipl_results
+	
+), match_info AS (
+	
+	SELECT 
+		ipl.dates AS date,
+		CONCAT(home_team, ' VS ', away_team) AS match,
+		t.team_name AS team,
+		ipl.result AS result,
+		ROW_NUMBER() OVER(PARTITION BY t.team_name ORDER BY ipl.dates) AS row_no
+	FROM teams AS t
+	JOIN ipl_results AS ipl
+	ON t.team_name = ipl.home_team OR 
+	   t.team_name = ipl.away_team
+	ORDER BY team
+	
+), consecutive_wins AS (
+	
+	SELECT 
+		date, 
+		team,
+		result,
+		row_no,
+		row_no - ROW_NUMBER() OVER(PARTITION BY team ORDER BY row_no) AS diff
+	FROM match_info
+	WHERE result = team
+	
+), result AS (
+	
+	SELECT 
+		team,
+		COUNT(1) OVER(PARTITION BY team, diff
+					  ORDER BY row_no
+					  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS streak
+	FROM consecutive_wins
+	
+)
+SELECT 
+	team, 
+	COALESCE(MAX(streak), 0) AS maximum_winning_streak
+FROM result
+GROUP BY team
+ORDER BY maximum_winning_streak DESC;
+
+
+-- CODE: FOR ADDITIONAL TESTCASE
+
+WITH teams AS (
+	
+	SELECT DISTINCT home_team AS team_name FROM ipl_results
+	
+), match_info AS (
+	
+	SELECT 
+		ipl.dates AS date,
+		CONCAT(home_team, ' VS ', away_team) AS match,
+		t.team_name AS team,
+		ipl.result AS result,
+		ROW_NUMBER() OVER(PARTITION BY t.team_name ORDER BY ipl.dates) AS row_no
+	FROM teams AS t
+	JOIN ipl_results AS ipl
+	ON t.team_name = ipl.home_team OR 
+	   t.team_name = ipl.away_team
+	ORDER BY team
+	
+), consecutive_wins AS (
+	
+	SELECT 
+		date, 
+		team,
+		result,
+		row_no,
+		row_no - ROW_NUMBER() OVER(PARTITION BY team ORDER BY row_no) AS diff
+	FROM match_info
+	WHERE result = team
+	
+), result AS (
+	
+	SELECT 
+		team,
+		COUNT(1) OVER(PARTITION BY team, diff
+					  ORDER BY row_no
+					  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS streak
+	FROM consecutive_wins
+	
+)
+SELECT 
+	t.team_name AS team, 
+	COALESCE(MAX(streak), 0) AS maximum_winning_streak
+FROM teams AS t
+LEFT JOIN result AS r
+ON t.team_name = r.team
+GROUP BY t.team_name
+ORDER BY maximum_winning_streak DESC;
