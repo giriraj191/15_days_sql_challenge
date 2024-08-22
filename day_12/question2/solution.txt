@@ -1,0 +1,11 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- you have to use the string matching, you can go for LIKE 
+-- clause but using regex is much more easy.
+
+-- CODE
+
+SELECT * 
+FROM feedback
+WHERE email ~ '^[a-zA-Z][a-zA-Z0-9._-]*@[a-zA-Z]+\.[a-zA-Z]{2,3}$'

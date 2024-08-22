@@ -1,0 +1,25 @@
+-- Run below code into your tool to generate the required dataset.
+
+DROP TABLE IF EXISTS feedback;
+
+CREATE TABLE feedback (
+    feedback_id  INT,
+    cust_name    VARCHAR(20),
+    email        VARCHAR(50),
+    rating       FLOAT,
+    remarks      VARCHAR(200)
+);
+
+INSERT INTO feedback VALUES (1, 'Zohan', 'zohan@2024@gmail.com', 4, 'good');
+INSERT INTO feedback VALUES (2, 'Keyaan', 'keyaan.TR@gmail.com', 5, 'very good');
+INSERT INTO feedback VALUES (3, 'Zayn', 'ZAYN...@gmail', 3, 'ok');
+INSERT INTO feedback VALUES (4, 'Emir', 'emir-#1@outlook.com', 4, 'ok');
+INSERT INTO feedback VALUES (5, 'Ashar', 'Ashar-@hotmail.DE', 4, 'nice');
+INSERT INTO feedback VALUES (6, 'Zoya', 'zoya@techTFQ.org', 4, 'great');
+INSERT INTO feedback VALUES (7, 'Kabir', 'kabir.com@-gmail.com', 2, 'bad');
+INSERT INTO feedback VALUES (8, 'Ayaan', 'ayaan123@company.net', 1, 'poor');
+INSERT INTO feedback VALUES (9, 'Meir', 'meir123@', 1.5, 'poor');
+INSERT INTO feedback VALUES (10, 'Noah', 'noah_.com@.com', 3.5, 'bad');
+INSERT INTO feedback VALUES (11, 'Idris', 'i@gmail.com', 5, 'excellent');
+INSERT INTO feedback VALUES (12, 'Arhaan', 'arhaan$gmail.com', 5, 'awesome');
+INSERT INTO feedback VALUES (13, 'Abrar', 'abrar123@gmail.comm', 5, 'awesome');

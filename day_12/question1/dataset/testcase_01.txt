@@ -1,0 +1,24 @@
+DROP TABLE IF EXISTS buses;
+
+CREATE TABLE buses (
+    bus_id        INT UNIQUE,
+    arrival_time  INT,
+    capacity      INT
+);
+
+DROP TABLE IF EXISTS passengers;
+
+CREATE TABLE passengers (
+    passenger_id  INT UNIQUE,
+    arrival_time  INT
+);
+
+INSERT INTO buses VALUES (1, 2, 1);
+INSERT INTO buses VALUES (2, 4, 10);
+INSERT INTO buses VALUES (3, 7, 2);
+
+INSERT INTO passengers VALUES (11, 1);
+INSERT INTO passengers VALUES (12, 1);
+INSERT INTO passengers VALUES (13, 5);
+INSERT INTO passengers VALUES (14, 6);
+INSERT INTO passengers VALUES (15, 7);

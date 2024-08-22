@@ -1,0 +1,55 @@
+-- SOLUTION
+
+-- Thought Process:
+-- > Firstly, we need to sort out the data that all the passengers who-- 
+--   arrive at the before the bus time must be present before that, or
+--   atleast we have maintain the number.
+-- > Then, we need to access the previous row/data everytime. Hence, we 
+--   have to use RECURSIVE queries.
+
+
+-- CODE
+
+WITH RECURSIVE result AS (
+
+	-- base query
+	WITH passenger_count_info AS (
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY arrival_time) AS index,
+			b.bus_id,
+			b.capacity,
+			(SELECT COUNT(*) 
+			 FROM passengers AS p 
+			 WHERE p.arrival_time <= b.arrival_time) as passenger_cnt
+		FROM buses AS b	
+	)
+	SELECT  
+		index,
+		bus_id,
+		capacity,
+		passenger_cnt,
+		LEAST(capacity, passenger_cnt) AS boarded,
+		LEAST(capacity, passenger_cnt) AS total_boarded
+	FROM passenger_count_info
+	WHERE index = 1
+
+	UNION
+
+	-- recursive query
+	SELECT  
+		pci.index,
+		pci.bus_id,
+		pci.capacity,
+		pci.passenger_cnt,
+		LEAST(pci.capacity, pci.passenger_cnt - r.total_boarded) AS boarded,
+		r.total_boarded + LEAST(pci.capacity, pci.passenger_cnt - r.total_boarded) AS total_boarded
+	FROM result r
+	JOIN passenger_count_info AS pci
+	ON r.index + 1 = pci.index
+	
+)
+SELECT 
+	bus_id,
+	boarded AS passenger_onboarded
+FROM result
+ORDER BY bus_id
