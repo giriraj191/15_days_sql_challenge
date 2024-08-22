@@ -1,0 +1,11 @@
+-- SOLUTION
+-- CODE
+SELECT 
+	store_id,
+	SUM(CASE WHEN LTRIM(LOWER(product_1)) LIKE 'apple%' 
+	     THEN 1 ELSE 0 END) AS product_1,
+	SUM(CASE WHEN LTRIM(LOWER(product_2)) LIKE 'apple%' 
+	     THEN 1 ELSE 0 END) AS product_2
+FROM product_demo
+GROUP BY store_id
+ORDER BY store_id

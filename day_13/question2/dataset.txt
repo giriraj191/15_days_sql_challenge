@@ -1,0 +1,20 @@
+-- Run below code to generate dataset
+
+DROP TABLE IF EXISTS tokens;
+
+CREATE TABLE tokens (
+    token_num INT,
+    customer  VARCHAR(20)
+);
+
+INSERT INTO tokens VALUES (1, 'Maryam');
+INSERT INTO tokens VALUES (2, 'Rocky');
+INSERT INTO tokens VALUES (3, 'John');
+INSERT INTO tokens VALUES (3, 'John');
+INSERT INTO tokens VALUES (2, 'Arya');
+INSERT INTO tokens VALUES (1, 'Pascal');
+INSERT INTO tokens VALUES (9, 'Kate');
+INSERT INTO tokens VALUES (9, 'Ibrahim');
+INSERT INTO tokens VALUES (8, 'Lilly');
+INSERT INTO tokens VALUES (8, 'Lilly');
+INSERT INTO tokens VALUES (5, 'Shane');

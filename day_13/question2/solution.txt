@@ -1,0 +1,7 @@
+-- SOLUTION CODE
+SELECT token_num AS result
+FROM tokens
+GROUP BY token_num
+HAVING COUNT(DISTINCT customer) = 1
+ORDER BY token_num
+LIMIT 1;
