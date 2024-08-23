@@ -1,0 +1,24 @@
+-- SOLUTION
+
+-- Thought Process:
+-- It is a simple question if you know about the functions like
+-- STRING_TO_ARRAY()
+-- UNNEST()
+-- LENGTH()
+-- Just use them and finally aggregate the result output in one cell.
+
+
+-- CODE
+
+WITH cte_length AS (
+	SELECT 
+		id,
+		LENGTH(UNNEST(STRING_TO_ARRAY(items, ',')))::VARCHAR AS length
+	FROM item
+)
+SELECT 	
+    id, 
+    STRING_AGG(length, ',')
+FROM cte_length
+GROUP BY id
+ORDER BY id

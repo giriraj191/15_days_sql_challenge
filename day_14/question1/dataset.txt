@@ -1,0 +1,33 @@
+-- Drop the table if it exists and create a new table for vacation plans
+DROP TABLE IF EXISTS vacation_plans;
+
+CREATE TABLE vacation_plans (
+    id        INT PRIMARY KEY,
+    emp_id    INT,
+    from_dt   DATE,
+    to_dt     DATE
+);
+
+-- Insert sample data into the vacation_plans table
+INSERT INTO vacation_plans VALUES (1, 1, '2024-02-12', '2024-02-16');
+INSERT INTO vacation_plans VALUES (2, 2, '2024-02-20', '2024-02-29');
+INSERT INTO vacation_plans VALUES (3, 3, '2024-03-01', '2024-03-31');
+INSERT INTO vacation_plans VALUES (4, 1, '2024-04-11', '2024-04-23');
+INSERT INTO vacation_plans VALUES (5, 4, '2024-06-01', '2024-06-30');
+INSERT INTO vacation_plans VALUES (6, 3, '2024-07-05', '2024-07-15');
+INSERT INTO vacation_plans VALUES (7, 3, '2024-08-28', '2024-09-15');
+
+-- Drop the table if it exists and create a new table for leave balances
+DROP TABLE IF EXISTS leave_balance;
+
+CREATE TABLE leave_balance (
+    emp_id   INT,
+    balance  INT
+);
+
+-- Insert sample data into the leave_balance table
+INSERT INTO leave_balance VALUES (1, 12);
+INSERT INTO leave_balance VALUES (2, 10);
+INSERT INTO leave_balance VALUES (3, 26);
+INSERT INTO leave_balance VALUES (4, 20);
+INSERT INTO leave_balance VALUES (5, 14);

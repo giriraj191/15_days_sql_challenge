@@ -1,0 +1,12 @@
+-- Run below code in SQL tool to generate dataset
+DROP TABLE IF EXISTS item;
+CREATE TABLE item
+(
+    id     INT,
+    items  VARCHAR(50)
+);
+
+INSERT INTO item VALUES (1, '22,122,1022');
+INSERT INTO item VALUES (2, ',6,0,9999');
+INSERT INTO item VALUES (3, '100,2000,2');
+INSERT INTO item VALUES (4, '4,44,444,4444');

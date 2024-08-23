@@ -1,0 +1,59 @@
+-- SOLUTION
+
+-- Thought Process:
+-- 1. First of all we need a list of all days with day written in it
+--    so, that we can skip Saturday and Sunday.
+-- 2. Then, we can combine above table with original vacation_plans
+--    table in order to generate each day between dates and then to 
+--    particular associatd emp_id.
+-- 3. Now, finally we combine it leave_balance table using emp_id so 
+--    that we can have the leave balance aside to the combine output.
+-- 4. Now, we have 2 options to operate-
+--    Option A We can take cummilative sum and as the cummilative sum 
+--             of the vacation_days and as it exceeds the leave balance 
+--             we can mark it as Insufficient Leave Balance.
+--    Option B As for each partition of emp_id we just need to fetch 
+--             previous remaining days Hence, we can go for recursive 
+--             queries.
+
+
+-- CODE 
+
+WITH leave_vacation_info AS (
+	
+	SELECT 
+		v.id, v.emp_id,
+		v.from_dt, v.to_dt,
+		l.balance AS leave_balance,
+		COUNT(d.dates) AS vacation_days
+	FROM vacation_plans AS v
+	CROSS JOIN LATERAL (SELECT 
+							CAST(dates AS date) AS dates, 
+							TRIM(TO_CHAR(dates, 'Day')) AS day
+						FROM GENERATE_SERIES(CAST(from_dt AS DATE), 
+											 CAST(to_dt as DATE), 
+	                                         '1 Day') AS dates) AS d
+	JOIN leave_balance AS l
+	ON l.emp_id = v.emp_id
+	WHERE day NOT IN ('Saturday', 'Sunday')
+	GROUP BY v.id, v.emp_id, v.from_dt, v.to_dt, l.balance
+	ORDER BY v.emp_id, v.id
+	
+), cum_vacation_info AS (
+	
+	SELECT *,
+		SUM(vacation_days) OVER(PARTITION BY emp_id 
+								ORDER BY id) AS cum_vacation_days
+	FROM leave_vacation_info
+	ORDER BY id
+
+)
+SELECT 
+	id, emp_id, from_dt, to_dt,
+	vacation_days, 
+	CASE 
+		WHEN cum_vacation_days > leave_balance 
+		THEN 'Insufficient Leave Balance'
+		ELSE 'Approved'
+	END AS Status
+FROM cum_vacation_info
