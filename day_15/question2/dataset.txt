@@ -1,0 +1,51 @@
+-- Run below code in editor/tool to generate dataset
+
+DROP TABLE IF EXISTS students;
+CREATE TABLE students
+(
+    roll_no   VARCHAR(20) PRIMARY KEY,
+    name      VARCHAR(30)
+);
+
+INSERT INTO students VALUES ('2GR5CS011', 'Maryam');
+INSERT INTO students VALUES ('2GR5CS012', 'Rose');
+INSERT INTO students VALUES ('2GR5CS013', 'Alice');
+INSERT INTO students VALUES ('2GR5CS014', 'Lilly');
+INSERT INTO students VALUES ('2GR5CS015', 'Anna');
+INSERT INTO students VALUES ('2GR5CS016', 'Zoya');
+
+
+DROP TABLE IF EXISTS student_marks;
+CREATE TABLE student_marks
+(
+    student_id  VARCHAR(20) PRIMARY KEY REFERENCES students(roll_no),
+    subject1    INT,
+    subject2    INT,
+    subject3    INT,
+    subject4    INT,
+    subject5    INT,
+    subject6    INT
+);
+
+INSERT INTO student_marks VALUES ('2GR5CS011', 75, NULL, 56, 69, 82, NULL);
+INSERT INTO student_marks VALUES ('2GR5CS012', 57, 46, 32, 30, NULL, NULL);
+INSERT INTO student_marks VALUES ('2GR5CS013', 40, 52, 56, NULL, 31, 40);
+INSERT INTO student_marks VALUES ('2GR5CS014', 65, 73, NULL, 81, 33, 41);
+INSERT INTO student_marks VALUES ('2GR5CS015', 98, NULL, 94, NULL, 90, 20);
+INSERT INTO student_marks VALUES ('2GR5CS016', NULL, 98, 98, 81, 84, 89);
+
+
+DROP TABLE IF EXISTS subjects;
+CREATE TABLE subjects
+(
+    id          VARCHAR(20) PRIMARY KEY,
+    name        VARCHAR(30),
+    pass_marks  INT CHECK (pass_marks >= 30)
+);
+
+INSERT INTO subjects VALUES ('S1', 'Mathematics', 40);
+INSERT INTO subjects VALUES ('S2', 'Algorithms', 35);
+INSERT INTO subjects VALUES ('S3', 'Computer Networks', 35);
+INSERT INTO subjects VALUES ('S4', 'Data Structure', 40);
+INSERT INTO subjects VALUES ('S5', 'Artificial Intelligence', 30);
+INSERT INTO subjects VALUES ('S6', 'Object Oriented Programming', 35);

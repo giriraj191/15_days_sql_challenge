@@ -1,0 +1,87 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- This question may seem overwhelming in first glance, but it is a simple question
+-- the trick is to break the question in parts/sub-tasks and complete each part separtely
+-- and then combine final result as one.
+
+-- Step 1: Aggregate the marks infromation in single table, to achieve this you have to
+-- 		   transform row level data into column level data.
+-- 		   Option A. Use CROSS_TAB() function
+-- 		   Option B. USE CROSS JOIN LATERAL VALUES 
+-- 		   As the columns are already aligned we can go for easy option i.e., Option B
+-- 		   Just use VALUES to convert each subject marks into rows and then CROSS JOIN()
+-- 		   them with student_marks table to aggreate marks information.
+
+-- Step 2: Aggregate the subject information, use information_schema.columns to derive 
+-- 		   column names and then combine them with subject table to aggreate data.
+
+-- Step 3: Now, you have all the required data. you just need to find out percentage and 
+-- 		   align column as per your interest.
+
+-- Step 4: Use CASE Statement to derive the final result as First, Second, Third or Fail.
+
+
+-- CODE
+
+WITH marks_info AS (
+	
+	SELECT 
+		sm.student_id,
+		s.name,
+		column1 AS subject_code,
+		column2 AS marks
+	FROM student_marks AS sm
+	CROSS JOIN LATERAL (VALUES ('subject1', subject1), ('subject2', subject2), 
+		                       ('subject3', subject3), ('subject4', subject4),
+		                       ('subject5', subject5), ('subject6', subject6)) AS t
+	JOIN students AS s
+	ON s.roll_no = sm.student_id
+	WHERE column2 IS NOT NULL
+	
+), subject_info AS (
+	
+	SELECT 
+		b.subject_code,
+		a.name AS subject_name,
+		a.pass_marks AS passing_marks
+	FROM (SELECT 
+			ROW_NUMBER() OVER(ORDER BY id) AS row_no,
+			id, name, pass_marks
+	      FROM subjects) AS a
+	JOIN (SELECT 
+			column_name AS subject_code, 
+			ROW_NUMBER() OVER(ORDER BY ordinal_position) AS row_no
+	      FROM information_schema.columns
+	      WHERE table_name = 'student_marks' AND 
+		        is_nullable = 'YES') AS b -- to avoid first column i.e., student_id
+	ON a.row_no = b.row_no
+	
+), result AS (
+	
+	SELECT 
+		mi.student_id,
+		mi.name,
+		ROUND(AVG(mi.marks), 2) AS percentage,
+		STRING_AGG(CASE WHEN mi.marks >= si.passing_marks 
+		                THEN NULL
+		                ELSE si.subject_name
+		           END, ' , ') AS failed_subjects
+	FROM marks_info AS mi
+	JOIN subject_info AS si 
+	ON mi.subject_code = si.subject_code
+	GROUP BY mi.student_id, mi.name
+	
+)
+SELECT *,
+	CASE 
+		WHEN failed_subjects IS NOT NULL
+		THEN 'Fail'
+		WHEN percentage >= 70 
+		THEN 'First Class'
+		WHEN percentage BETWEEN 50 AND 70 
+		THEN 'Second Class'
+		WHEN percentage < 50
+		THEN 'Third Class'
+	END AS result
+FROM result;

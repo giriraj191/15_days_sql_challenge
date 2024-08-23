@@ -1,0 +1,40 @@
+-- SOLUTION 
+
+-- Thought Process:
+-- The problem first seems complicated but if you figure out how 
+-- to make the groups you can easily get over it.
+
+-- 1. Firstly, try to find a way to include last 'off' of each partition
+--    of 'on' to include it in result.
+--    HINT: make it the first item, use LAG() to fetch previous and make it 
+--          first item of that partition :)
+
+-- 2. Now, if you included the 'off' then try to make groups such that 'off' 
+--    will be the group divider, use SUM() OVER() to  divide groups on 'off'
+--    like 0 for 'on' and 1 for 'off' - its a most common way to do it.
+
+-- 3. Now, as we have our partitions so, we can fetch min and max value of 
+--    each group and (COUNT() - 1) - as last off included so to exclude it out
+--    we have to subtract - 1.
+
+
+-- CODE 
+
+WITH result AS (
+	
+	SELECT *,
+		SUM(CASE WHEN prev_status = 'off' THEN 1 ELSE 0 END)
+			OVER(ORDER BY times) AS grp
+	FROM (SELECT *,
+			LAG(status, 1, 'on') OVER(ORDER BY times) AS prev_status
+		  FROM login_details)	
+	
+)
+SELECT 
+	MIN(times) AS log_on,
+	MAX(times) AS log_off,
+	COUNT(*) - 1 AS duration
+FROM result
+GROUP BY grp
+HAVING COUNT(*) - 1 > 0
+ORDER BY log_on;
