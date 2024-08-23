@@ -1,4 +1,4 @@
-# 15 Days SQL Challenge  
+# 15 Days SQL Challenge | COMPLETED
 
 ## Overview  
 Welcome to the 15 Days SQL Challenge! This challenge is based on [TechTFQ's](https://www.linkedin.com/in/thoufiq-mohammed/) 30 Days SQL Challenge and involves solving 2 interview-level SQL questions daily. Each day's challenge will include a problem statement, dataset, and solution, all organized within day-wise folders.
